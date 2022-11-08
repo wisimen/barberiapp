@@ -1,12 +1,10 @@
 ﻿using Barberiapp.Models;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Barberiapp.Entidades
 {
     public class Barbero : IdentityModels
     {
-        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CodigoBarbero { get; set; }
 
