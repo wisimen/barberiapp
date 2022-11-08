@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
 using Barberiapp.DTOs.Autenticacion;
-using Barberiapp.DTOs.Detalle;
-using Barberiapp.DTOs.Historial;
-using Barberiapp.DTOs.ImagenVehiculo;
-using Barberiapp.DTOs.Marca;
-using Barberiapp.DTOs.Procedimiento;
+using Barberiapp.DTOs.Barbería;
+using Barberiapp.DTOs.Barbero;
+using Barberiapp.DTOs.Cita;
+using Barberiapp.DTOs.Cliente;
+using Barberiapp.DTOs.FotoCorte;
+using Barberiapp.DTOs.Horario;
+using Barberiapp.DTOs.MediosPago;
+using Barberiapp.DTOs.Servicio;
 using Barberiapp.DTOs.TipoDocumento;
-using Barberiapp.DTOs.TipoVehiculo;
-using Barberiapp.DTOs.Vehiculo;
+using Barberiapp.DTOs.TipoServicio;
 using Barberiapp.Entidades;
 using Barberiapp.Models;
 
@@ -15,55 +17,71 @@ namespace Barberiapp.Helpers
 {
     public class AutoMapperProfiles : Profile
     {
-
         public AutoMapperProfiles()
         {
-            //Mapeo de Historial
-            CreateMap<Historial, HistorialDTO>().ReverseMap();
-            CreateMap<HistorialCreacionDTO, Historial>();
-            CreateMap<HistorialActualizacionDTO, Historial>();
-            CreateMap<HistorialDTO, Historial>();
+            //Mapeo Autenticación
+            CreateMap<UsuarioCreacionDTO, UsuarioCreacionBaseDTO>().ReverseMap();
+            CreateMap<UsuarioCreacionDTO, IdentityModels>().ReverseMap();
 
-            //Mapeo de TipoVehiculo
-            CreateMap<TipoVehiculo, TipoVehiculoDTO>().ReverseMap();
-            CreateMap<TipoVehiculoCreacionDTO, TipoVehiculo>();
-            CreateMap<TipoVehiculoActualizacionDTO, TipoVehiculo>();
-            CreateMap<TipoVehiculoDTO, TipoVehiculo>();
+            //Mapeo Barberia
+            CreateMap<Barberia, BarberiaDTO>().ReverseMap();
+            CreateMap<BarberiaCreacionDTO, Barberia>();
+            CreateMap<BarberiaActualizacionDTO, Barberia>();
+            CreateMap<BarberiaDTO, Barberia>();
 
-            //Mapeo de TipoDocumento
+            //Mapeo Barbero
+            CreateMap<Barbero, BarberoDTO>().ReverseMap();
+            CreateMap<BarberoCreacionDTO, Barbero>();
+            CreateMap<BarberoActualizacionDTO, Barbero>();
+            CreateMap<BarberoDTO, Barbero>();
+
+            //Mapeo Cliente
+            CreateMap<Cliente, ClienteDTO>().ReverseMap();
+            CreateMap<ClienteCreacionDTO, Cliente>();
+            CreateMap<ClienteActualizacionDTO, Cliente>();
+            CreateMap<ClienteDTO, Cliente>();
+
+            //Mapeo Cita
+            CreateMap<Cita, CitaDTO>().ReverseMap();
+            CreateMap<CitaCreacionDTO, Cita>();
+            CreateMap<CitaActualizacionDTO, Cita>();
+            CreateMap<CitaDTO, Cita>();
+
+            //Mapeo FotoCorte
+            CreateMap<FotoCorte, FotoCorteDTO>().ReverseMap();
+            CreateMap<FotoCorteCreacionDTO, FotoCorte>();
+            CreateMap<FotoCorteActualizacionDTO, FotoCorte>();
+            CreateMap<FotoCorteDTO, FotoCorte>();
+
+            //Horario
+            CreateMap<Horario, HorarioDTO>().ReverseMap();
+            CreateMap<HorarioCreacionDTO, Horario>();
+            CreateMap<HorarioActualizacionDTO, Horario>();
+            CreateMap<HorarioDTO, Horario>();
+
+            //MediosPago
+            CreateMap<MediosPago, MediosPagoDTO>().ReverseMap();
+            CreateMap<MediosPagoCreacionDTO, MediosPago>();
+            CreateMap<MediosPagoActualizacionDTO, MediosPago>();
+            CreateMap<MediosPagoDTO, MediosPago>();
+
+            //Servicio
+            CreateMap<Servicio, ServicioDTO>().ReverseMap();
+            CreateMap<ServicioCreacionDTO, Servicio>();
+            CreateMap<ServicioActualizacionDTO, Servicio>();
+            CreateMap<ServicioDTO, Servicio>();
+
+            //TipoDocumento
             CreateMap<TipoDocumento, TipoDocumentoDTO>().ReverseMap();
             CreateMap<TipoDocumentoCreacionDTO, TipoDocumento>();
             CreateMap<TipoDocumentoActualizacionDTO, TipoDocumento>();
             CreateMap<TipoDocumentoDTO, TipoDocumento>();
 
-            //Mapeo de Detalle
-            CreateMap<Detalle, DetalleDTO>().ReverseMap();
-
-            //Mapeo de Vehiculo
-            CreateMap<Vehiculo, VehiculoDTO>().ReverseMap();
-            CreateMap<VehiculoCreacionDTO, Vehiculo>();
-            CreateMap<VehiculoActualizacionDTO, Vehiculo>();
-            CreateMap<VehiculoDTO, Vehiculo>();
-
-            //Mapeo de Marca
-            CreateMap<Marca, MarcaDTO>().ReverseMap();
-            CreateMap<MarcaCreacionDTO, Marca>();
-            CreateMap<MarcaActualizacionDTO, Marca>();
-            CreateMap<MarcaDTO, Marca>();
-
-            //Mapeo de Procedimiento
-            CreateMap<Procedimiento, ProcedimientoDTO>().ReverseMap();
-            CreateMap<ProcedimientoCreacionDTO, Procedimiento>();
-            CreateMap<ProcedimientoActualizacionDTO, Procedimiento>();
-            CreateMap<ProcedimientoDTO, Procedimiento>();
-
-            //Mapeo de ImagenVehiculo
-            CreateMap<ImagenVehiculo, ImagenVehiculoDTO>().ReverseMap();
-
-            //Mapeo Autenticación
-            CreateMap<UsuarioCreacionDTO, UsuarioCreacionBaseDTO>().ReverseMap();
-            CreateMap<UsuarioCreacionDTO, IdentityModels>().ReverseMap();
-
+            //TipoServicio
+            CreateMap<TipoServicio, TipoServicioDTO>().ReverseMap();
+            CreateMap<TipoServicioCreacionDTO, TipoServicio>();
+            CreateMap<TipoServicioActualizacionDTO, TipoServicio>();
+            CreateMap<TipoServicioDTO, TipoServicio>();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Barberiapp.Data;
 using Barberiapp.DTOs.Autenticacion;
-using Barberiapp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -11,8 +11,6 @@ using System.Text;
 
 namespace Barberiapp.Controllers
 {
-    [ApiController]
-    [Route("api/cuentas")]
     public class CuentasController : ControllerBase
     {
         private readonly UserManager<IdentityUser> userManager;
@@ -22,7 +20,12 @@ namespace Barberiapp.Controllers
         private readonly IMapper mapper;
         private readonly ILogger<CuentasController> logger;
 
-        public CuentasController(UserManager<IdentityUser> userManager, IConfiguration configuration, SignInManager<IdentityUser> signInManager, ApplicationDbContext context, IMapper mapper, ILogger<CuentasController> logger)
+        public CuentasController(UserManager<IdentityUser> userManager,
+            IConfiguration configuration,
+            SignInManager<IdentityUser> signInManager,
+            ApplicationDbContext context,
+            IMapper mapper,
+            ILogger<CuentasController> logger)
         {
             this.userManager = userManager;
             this.configuration = configuration;
@@ -32,32 +35,12 @@ namespace Barberiapp.Controllers
             this.logger = logger;
         }
 
-        [HttpPost("registrar")] // api/cuentas/registrar
-        public async Task<ActionResult<RespuestaAutenticacion>> Registrar(UsuarioCreacionBaseDTO credencialesUsuario)
-        {
 
-            var usuario = mapper.Map<UsuarioCreacionDTO>(credencialesUsuario);
-            usuario.UserName = usuario.Email;
-            usuario.Id = Guid.NewGuid().ToString();
-
-            var resultado = await userManager.CreateAsync(mapper.Map<IdentityModels>(usuario), credencialesUsuario.Password);
-
-            logger.LogWarning("Nueva cuenta creada: {@usuario.Id}", usuario.Id);
-            if (resultado.Succeeded)
-            {
-                return await ConstruirToken(mapper.Map<UsuarioCreacionDTO>(credencialesUsuario));
-            }
-            else
-            {
-                return BadRequest(resultado.Errors);
-            }
-        }
-
-        private async Task<RespuestaAutenticacion> ConstruirToken(CredencialesUsuario credencialesUsuario)
+        public async Task<RespuestaAutenticacion> ConstruirToken(CredencialesUsuario credencialesUsuario)
         {
             var claims = new List<Claim>()
             {
-                new Claim("email", credencialesUsuario.Email),
+                new Claim("Email", credencialesUsuario.Email),
                 new Claim("HoraLogin", DateTime.Now.Ticks.ToString()),
                 new Claim("BasicUser", true.ToString())
             };
@@ -83,6 +66,7 @@ namespace Barberiapp.Controllers
         }
 
         [HttpPost("login")] // Inicio de sesión
+        [AllowAnonymous]
         public async Task<ActionResult<RespuestaAutenticacion>> Login(CredencialesUsuario credencialesUsuario)
         {
 
@@ -99,9 +83,14 @@ namespace Barberiapp.Controllers
         }
 
         [HttpPost("AsignarRol")] // Asignar Claim(rol)
-        public async Task<ActionResult> AddClaimsToUser(string email, string claimname, string claimValue)
+        [AllowAnonymous]
+        public async Task<ActionResult> AddClaimsToUser(string email, string claimname, string claimValue, string permissionKey)
         {
-
+            var key = configuration["permissionKey"];
+            if (permissionKey != key)
+            {
+                return BadRequest("No tienes permisos para realizar esta acción");
+            }
             //Validar si el usario existe
             var user = await userManager.FindByEmailAsync(email);
             if (user == null)

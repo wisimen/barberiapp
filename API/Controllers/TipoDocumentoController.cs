@@ -34,10 +34,10 @@ namespace Barberiapp.Controllers
         }
 
         // Búsqueda por parámetro
-        [HttpGet("{codigo:int}")]
-        public async Task<ActionResult<TipoDocumentoDTO>> Get(int codigo)
+        [HttpGet("{codigoTipoDocumento:int}")]
+        public async Task<ActionResult<TipoDocumentoDTO>> Get(int codigoTipoDocumento)
         {
-            var tipoDocumento = await context.TipoDocumento.FirstOrDefaultAsync(x => x.Codigo == codigo);
+            var tipoDocumento = await context.TipoDocumento.FirstOrDefaultAsync(x => x.CodigoTipoDocumento == codigoTipoDocumento);
             if (tipoDocumento == null)
             {
                 return NotFound();
@@ -54,14 +54,14 @@ namespace Barberiapp.Controllers
             return NoContent(); //204
         }
 
-        [HttpPut("{codigo}")]
-        public async Task<ActionResult> Put(TipoDocumentoActualizacionDTO tipoDocumento, int codigo)
+        [HttpPut("{codigoTipoDocumento}")]
+        public async Task<ActionResult> Put(TipoDocumentoActualizacionDTO tipoDocumento, int codigoTipoDocumento)
         {
-            if (tipoDocumento.Codigo != codigo)
+            if (tipoDocumento.CodigoTipoDocumento != codigoTipoDocumento)
             {
                 return BadRequest("El codigo no es válido");
             }
-            var existe = await context.TipoDocumento.AnyAsync(x => x.Codigo == codigo);
+            var existe = await context.TipoDocumento.AnyAsync(x => x.CodigoTipoDocumento == codigoTipoDocumento);
             if (!existe)
             {
                 return NotFound();
@@ -73,10 +73,10 @@ namespace Barberiapp.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
-        [HttpDelete("{codigo}")]
-        public async Task<ActionResult> Delete(int codigo)
+        [HttpDelete("{codigoTipoDocumento}")]
+        public async Task<ActionResult> Delete(int codigoTipoDocumento)
         {
-            var tipoDocumento = await context.TipoDocumento.FirstOrDefaultAsync(x => x.Codigo == codigo);
+            var tipoDocumento = await context.TipoDocumento.FirstOrDefaultAsync(x => x.CodigoTipoDocumento == codigoTipoDocumento);
 
             if (tipoDocumento == null)
             {

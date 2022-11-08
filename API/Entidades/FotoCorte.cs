@@ -25,10 +25,7 @@ namespace Barberiapp.Entidades
         public Barberia Barberia { get; set; }
 
         [ForeignKey("CodigoBarbero")]
-        public Barbero Barbero
-        {
-            get; set;
-        }
+        public Barbero Barbero { get; set; }
     }
 }
 

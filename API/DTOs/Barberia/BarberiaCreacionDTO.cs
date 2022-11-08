@@ -1,14 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Barberiapp.Entidades
+namespace Barberiapp.DTOs.Barberia
 {
-    public class Barberia
+    public class BarberiaCreacionDTO
     {
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CodigoBarberia { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [MaxLength(100, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres")]
@@ -31,10 +26,6 @@ namespace Barberiapp.Entidades
         [MaxLength(300, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres")]
         public string URL_Ubicacion { get; set; }
 
-        [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [DataType(DataType.ImageUrl, ErrorMessage = "El campo {0} no cumple con el formato")]
-        public string Logo { get; set; }
-
         [DataType(DataType.Url, ErrorMessage = "El campo {0} no cumple con el formato")]
         [MaxLength(300, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres")]
         public string URL_Instagram { get; set; }
@@ -47,13 +38,7 @@ namespace Barberiapp.Entidades
         [MaxLength(300, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres")]
         public string URL_Youtube { get; set; }
 
-        // Referencias
-        public ICollection<Cita> Citas { get; set; }
-        public ICollection<Barbero> Barberos { get; set; }
-        public ICollection<Horario> Horarios { get; set; }
-        public ICollection<Servicio> Servicios { get; set; }
-        public ICollection<MediosPago> MediosPago { get; set; }
-        public ICollection<FotoCorte> Fotos { get; set; }
+        [Required(ErrorMessage = "El campo {0} es obligatorio")]
+        public IFormFile LogoFile { get; set; }
     }
 }
-

@@ -42,9 +42,8 @@
 
         public async Task<string> GuardarArchivo(string contenedor, IFormFile foto)
         {
+            var nombreArchivo = $"{Guid.NewGuid()}_{foto.FileName}";
 
-            var extension = Path.GetExtension(foto.FileName);
-            var nombreArchivo = $"{(foto.FileName)}";
             string folder = Path.Combine(env.WebRootPath, contenedor);
 
             if (!Directory.Exists(folder))
@@ -63,10 +62,6 @@
                 await File.WriteAllBytesAsync(ruta, contenido);
 
             }
-
-
-
-
 
             var urlActual = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}";
             var urlParaBD = Path.Combine(urlActual, contenedor, nombreArchivo).Replace("\\", "/");

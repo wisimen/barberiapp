@@ -14,6 +14,7 @@ namespace Barberiapp.Entidades
         [MaxLength(100, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres")]
         public string Nombre { get; set; }
 
+        // Referencias
         public ICollection<Servicio> Servicios { get; set; }
     }
 }

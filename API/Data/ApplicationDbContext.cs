@@ -18,9 +18,6 @@ namespace Barberiapp.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<Detalle>().HasKey(
-                d => new { d.CodigoHistorial, d.CodigoProcedimiento });
-
             base.OnModelCreating(modelBuilder);
 
         }

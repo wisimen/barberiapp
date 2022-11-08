@@ -2,7 +2,7 @@
 {
     public class TipoDocumentoDTO
     {
-        public int Codigo { get; set; }
+        public int CodigoTipoDocumento { get; set; }
 
         public string Nombre { get; set; }
     }
