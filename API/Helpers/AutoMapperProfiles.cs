@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Barberiapp.DTOs.Autenticacion;
-using Barberiapp.DTOs.Barbería;
+using Barberiapp.DTOs.Barberia;
 using Barberiapp.DTOs.Barbero;
 using Barberiapp.DTOs.Cita;
 using Barberiapp.DTOs.Cliente;
