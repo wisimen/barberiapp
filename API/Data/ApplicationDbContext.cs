@@ -20,12 +20,14 @@ namespace Barberiapp.Data
             modelBuilder.Entity<Cita>()
            .HasOne(p => p.Barbero)
            .WithMany(b => b.Citas)
-           .HasForeignKey(p => p.CodigoBarbero);
+           .HasForeignKey(p => p.CodigoBarbero)
+           .HasPrincipalKey(b => b.CodigoBarbero);
 
             modelBuilder.Entity<Cita>()
            .HasOne(p => p.Cliente)
            .WithMany(b => b.Citas)
-           .HasForeignKey(p => p.CodigoCliente);
+           .HasForeignKey(p => p.CodigoCliente)
+           .HasPrincipalKey(b => b.CodigoCliente);
 
             base.OnModelCreating(modelBuilder);
 
