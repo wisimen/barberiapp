@@ -18,8 +18,6 @@
 
         public int CodigoCliente { get; set; }
 
-        public int CodigoBarberia { get; set; }
-
         public int CodigoMedioPago { get; set; }
     }
 }

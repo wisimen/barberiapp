@@ -14,7 +14,7 @@ namespace Barberiapp.Controllers
     public class CuentasController : ControllerBase
     {
         private readonly UserManager<IdentityUser> userManager;
-        private readonly IConfiguration configuration;
+        public readonly IConfiguration configuration;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
@@ -36,7 +36,7 @@ namespace Barberiapp.Controllers
         }
 
 
-        public async Task<RespuestaAutenticacion> ConstruirToken(CredencialesUsuario credencialesUsuario)
+        protected async Task<RespuestaAutenticacion> ConstruirToken(CredencialesUsuario credencialesUsuario)
         {
             var claims = new List<Claim>()
             {
@@ -82,7 +82,7 @@ namespace Barberiapp.Controllers
             }
         }
 
-        [HttpPost("AsignarRol")] // Asignar Claim(rol)
+        [HttpPost("AsignarRol")]
         [AllowAnonymous]
         public async Task<ActionResult> AddClaimsToUser(string email, string claimname, string claimValue, string permissionKey)
         {

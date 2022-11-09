@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace MediosPagopp.Controllers
 {
     [ApiController]
-    [Route("api/MediosPago")]
+    [Route("api/mediosPago")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "BasicUser")]
     public class MediosPagoController : Controller
     {
@@ -45,7 +45,7 @@ namespace MediosPagopp.Controllers
         }
 
 
-        [HttpPut("{codigoMediosPago}")]
+        [HttpPut("{codigoMedioPago:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         public async Task<ActionResult> Put(MediosPagoActualizacionDTO mediosPago, int codigoMedioPago)
         {

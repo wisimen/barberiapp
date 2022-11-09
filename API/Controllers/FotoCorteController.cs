@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Barberiapp.Controllers
 {
     [ApiController]
-    [Route("api/FotoCorte")]
+    [Route("api/fotoCorte")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "BasicUser")]
     public class FotoCorteController : Controller
     {
@@ -52,23 +52,9 @@ namespace Barberiapp.Controllers
             return mapper.Map<List<FotoCorteDTO>>(FotoCorte);
         }
 
-        // Búsqueda por parámetro
-        [HttpGet("PorBarberia/{codigoBarberia:int}")]
-        public async Task<ActionResult<List<FotoCorteDTO>>> GetPorBarberia(int codigoBarberia)
-        {
-            var FotoCorte = await context.FotoCorte
-                .Where(x => x.CodigoBarberia == codigoBarberia)
-                .ToListAsync();
-            if (FotoCorte == null)
-            {
-                return NotFound();
-            }
-            return mapper.Map<List<FotoCorteDTO>>(FotoCorte);
-        }
-
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Barber")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Barberia")]
         public async Task<ActionResult> Post([FromBody] FotoCorteCreacionDTO fotoCorteCreacionDTO)
         {
 
@@ -85,9 +71,9 @@ namespace Barberiapp.Controllers
         }
 
 
-        [HttpPut("{codigoFotoCorte}")]
+        [HttpPut("{codigoFotoCorte:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Barberia")]
-        public async Task<ActionResult> Put(FotoCorteActualizacionDTO fotoCorte, int codigoFotoCorte)
+        public async Task<ActionResult> Put([FromBody] FotoCorteActualizacionDTO fotoCorte, int codigoFotoCorte)
         {
             if (fotoCorte.CodigoFotoCorte != codigoFotoCorte)
             {
@@ -111,7 +97,7 @@ namespace Barberiapp.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Barberia")]
-        [HttpDelete("{codigoFotoCorte}")]
+        [HttpDelete("{codigoFotoCorte:int}")]
         public async Task<ActionResult> Delete(int codigoFotoCorte)
         {
             var fotoCorte = await context.FotoCorte.FirstOrDefaultAsync(x => x.CodigoFotoCorte == codigoFotoCorte);

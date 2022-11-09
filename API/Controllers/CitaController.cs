@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Citapp.Controllers
 {
     [ApiController]
-    [Route("api/Cita")]
+    [Route("api/cita")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "BasicUser")]
     public class CitaController : Controller
     {
@@ -58,7 +58,7 @@ namespace Citapp.Controllers
         }
 
 
-        [HttpPut("{codigoCita}")]
+        [HttpPut("{codigoCita:int}")]
         public async Task<ActionResult> Put(CitaActualizacionDTO cita, int codigoCita)
         {
             if (cita.CodigoCita != codigoCita)
@@ -76,7 +76,7 @@ namespace Citapp.Controllers
             return Ok();
         }
 
-        [HttpDelete("{codigoCita}")]
+        [HttpDelete("{codigoCita:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         public async Task<ActionResult> Delete(int codigoCita)
         {

@@ -15,14 +15,9 @@ namespace Barberiapp.Entidades
         public string URL_Foto { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        public int CodigoBarberia { get; set; }
-
-        [Required(ErrorMessage = "El campo {0} es obligatorio")]
         public int CodigoBarbero { get; set; }
 
         // Referencias
-        [ForeignKey("CodigoBarberia")]
-        public Barberia Barberia { get; set; }
 
         [ForeignKey("CodigoBarbero")]
         public Barbero Barbero { get; set; }

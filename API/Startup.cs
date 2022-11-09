@@ -1,4 +1,5 @@
 ﻿using Barberiapp.Data;
+using Barberiapp.Models;
 using Barberiapp.Servicios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -120,8 +121,8 @@ namespace Barberiapp
             });
 
 
-
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentityCore<ApplicationUser>()
+                    .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultTokenProviders();
 
@@ -132,6 +133,7 @@ namespace Barberiapp
 
                 opciones.AddPolicy("BasicUser", politica => politica.RequireClaim("BasicUser"));
 
+                opciones.AddPolicy("Barberia", politica => politica.RequireClaim("Rol", "Barbero"));
 
 
 

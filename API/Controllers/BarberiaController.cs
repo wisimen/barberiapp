@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Barberiapp.Controllers
 {
     [ApiController]
-    [Route("api/Barberia")]
+    [Route("api/barberia")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "BasicUser")]
     public class BarberiaController : Controller
     {
@@ -39,7 +39,7 @@ namespace Barberiapp.Controllers
         }
 
         // Búsqueda por parámetro
-        [HttpGet("PorNombre/{nombre:string}")]
+        [HttpGet("PorNombre/{nombre}")]
         public async Task<ActionResult<List<BarberiaDTO>>> GetPorNombre(string nombre)
         {
             var Barberia = await context.Barberia
@@ -73,7 +73,7 @@ namespace Barberiapp.Controllers
         }
 
 
-        [HttpPut("{codigoBarberia}")]
+        [HttpPut("{codigoBarberia:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         public async Task<ActionResult> Put(BarberiaActualizacionDTO barberia, int codigoBarberia)
         {
@@ -98,7 +98,7 @@ namespace Barberiapp.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
-        [HttpDelete("{codigoBarberia}")]
+        [HttpDelete("{codigoBarberia:int}")]
         public async Task<ActionResult> Delete(int codigoBarberia)
         {
             var barberia = await context.Barberia.FirstOrDefaultAsync(x => x.CodigoBarberia == codigoBarberia);

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Barberiapp.Models
 {
-    public class IdentityModels : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [MaxLength(50, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres")]
@@ -38,5 +38,9 @@ namespace Barberiapp.Models
 
         [ForeignKey("CodigoTipoDocumento")]
         public TipoDocumento TipoDocumento { get; set; }
+
+        public ICollection<Barbero> UsuarioBarbero { get; set; }
+
+        public ICollection<Cliente> UsuarioCliente { get; set; }
     }
 }

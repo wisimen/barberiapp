@@ -48,12 +48,10 @@ namespace Barberiapp.Entidades
         public string URL_Youtube { get; set; }
 
         // Referencias
-        public ICollection<Cita> Citas { get; set; }
         public ICollection<Barbero> Barberos { get; set; }
         public ICollection<Horario> Horarios { get; set; }
         public ICollection<Servicio> Servicios { get; set; }
         public ICollection<MediosPago> MediosPago { get; set; }
-        public ICollection<FotoCorte> Fotos { get; set; }
     }
 }
 

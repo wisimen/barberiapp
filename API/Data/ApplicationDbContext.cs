@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Barberiapp.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
@@ -29,13 +29,22 @@ namespace Barberiapp.Data
            .HasForeignKey(p => p.CodigoCliente)
            .HasPrincipalKey(b => b.CodigoCliente);
 
+            modelBuilder.Entity<FotoCorte>()
+           .HasOne(p => p.Barbero)
+           .WithMany(b => b.FotosCortes)
+           .HasForeignKey(p => p.CodigoBarbero)
+           .HasPrincipalKey(b => b.CodigoBarbero);
+
+
+
             base.OnModelCreating(modelBuilder);
 
         }
 
 
         public DbSet<TipoDocumento> TipoDocumento { get; set; }
-        public DbSet<IdentityModels> Usuario { get; set; }
+        public DbSet<ApplicationUser> Usuario { get; set; }
+
         // Tablas de la base de datos   
         public DbSet<Barberia> Barberia { get; set; }
         public DbSet<Barbero> Barbero { get; set; }

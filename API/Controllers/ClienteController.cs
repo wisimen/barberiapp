@@ -3,6 +3,7 @@ using Barberiapp.Data;
 using Barberiapp.DTOs.Autenticacion;
 using Barberiapp.DTOs.Cliente;
 using Barberiapp.Entidades;
+using Barberiapp.Models;
 using Barberiapp.Servicios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -54,14 +55,14 @@ namespace Barberiapp.Controllers
         }
 
         // Búsqueda por parámetro
-        [HttpGet("PorNombre/{nombre:string}")]
+        [HttpGet("PorNombre/{nombre}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Barberia")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         public async Task<ActionResult<List<ClienteDTO>>> GetPorNombre(string nombre)
         {
             var Cliente = await context.Cliente
                 .Where(
-                    x => x.Nombre
+                    x => x.Usuario.Nombre
                     .Contains(
                         nombre,
                         StringComparison.InvariantCultureIgnoreCase)
@@ -90,10 +91,10 @@ namespace Barberiapp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<RespuestaAutenticacion>> Registrar(ClienteCreacionDTO clienteCreacionDTO)
+        public async Task<ActionResult<RespuestaAutenticacion>> Registrar([FromForm] ClienteCreacionDTO clienteCreacionDTO)
         {
 
-            var clienteEntidad = mapper.Map<Cliente>(clienteCreacionDTO);
+            var clienteEntidad = mapper.Map<ApplicationUser>(clienteCreacionDTO);
             clienteEntidad.UserName = clienteEntidad.Email;
             clienteEntidad.Id = Guid.NewGuid().ToString();
             if (clienteCreacionDTO.FotoFile != null)
@@ -103,7 +104,17 @@ namespace Barberiapp.Controllers
 
             var resultado = await userManager.CreateAsync(clienteEntidad, clienteCreacionDTO.Password);
 
+            context.Add(new Cliente
+            {
+                CodigoUsuario = clienteEntidad.Id
+            }
+            );
+            await context.SaveChangesAsync();
+
             logger.LogWarning("Nueva cuenta creada: {@clienteEntidad.Id}", clienteEntidad.Id);
+
+            await AddClaimsToUser(clienteEntidad.Email, "Rol", "Cliente", configuration["permissionKey"]);
+
             if (resultado.Succeeded)
             {
                 CredencialesUsuario credencial = new CredencialesUsuario
@@ -121,7 +132,7 @@ namespace Barberiapp.Controllers
 
         [HttpPut("{codigoCliente:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "BasicUser")]
-        public async Task<ActionResult> Put(ClienteActualizacionDTO clienteActualizacionDTO, int codigoCliente)
+        public async Task<ActionResult> Put([FromBody] ClienteActualizacionDTO clienteActualizacionDTO, int codigoCliente)
         {
             // Realizar validaciones
             if (clienteActualizacionDTO.CodigoCliente != codigoCliente)
@@ -148,7 +159,7 @@ namespace Barberiapp.Controllers
             {
                 return NotFound();
             }
-            await userManager.DeleteAsync(cliente);
+            await userManager.DeleteAsync(cliente.Usuario);
             logger.LogWarning("Deleted cliente: {@cliente}", cliente);
             return NoContent();
         }
@@ -161,7 +172,7 @@ namespace Barberiapp.Controllers
                 clienteActualizacionDTO.Password = clienteActualizacionDTO.NuevoPassword;
             }
 
-            var clienteEntidad = mapper.Map<Cliente>(clienteActualizacionDTO);
+            var clienteEntidad = mapper.Map<ApplicationUser>(clienteActualizacionDTO);
 
             if (clienteActualizacionDTO.FotoFile != null)
             {

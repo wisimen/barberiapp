@@ -3,6 +3,7 @@
     public class ClienteDTO
     {
         public int CodigoCliente { get; set; }
+        public string CodigoUsuario { get; set; }
 
         public string Email { get; set; }
 

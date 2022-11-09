@@ -21,7 +21,7 @@ namespace Barberiapp.Helpers
         {
             //Mapeo Autenticación
             CreateMap<UsuarioCreacionDTO, UsuarioCreacionBaseDTO>().ReverseMap();
-            CreateMap<UsuarioCreacionDTO, IdentityModels>().ReverseMap();
+            CreateMap<UsuarioCreacionDTO, ApplicationUser>().ReverseMap();
 
             //Mapeo Barberia
             CreateMap<Barberia, BarberiaDTO>().ReverseMap();
@@ -30,13 +30,13 @@ namespace Barberiapp.Helpers
             CreateMap<BarberiaDTO, Barberia>();
 
             //Mapeo Barbero
-            CreateMap<Barbero, BarberoDTO>().ReverseMap();
+            CreateMap<Barbero, BarberoDTO>().ForAllMembers(x => x.MapFrom(src => src.Usuario));
             CreateMap<BarberoCreacionDTO, Barbero>();
             CreateMap<BarberoActualizacionDTO, Barbero>();
             CreateMap<BarberoDTO, Barbero>();
 
             //Mapeo Cliente
-            CreateMap<Cliente, ClienteDTO>().ReverseMap();
+            CreateMap<Cliente, ClienteDTO>().ForAllMembers(x => x.MapFrom(src => src.Usuario));
             CreateMap<ClienteCreacionDTO, Cliente>();
             CreateMap<ClienteActualizacionDTO, Cliente>();
             CreateMap<ClienteDTO, Cliente>();

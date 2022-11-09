@@ -27,9 +27,6 @@ namespace Barberiapp.DTOs.Cita
         public int CodigoCliente { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        public int CodigoBarberia { get; set; }
-
-        [Required(ErrorMessage = "El campo {0} es obligatorio")]
         public int CodigoMedioPago { get; set; }
     }
 }

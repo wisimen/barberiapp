@@ -3,6 +3,8 @@
     public class BarberoDTO
     {
         public int CodigoBarbero { get; set; }
+        public string CodigoUsuario { get; set; }
+        public int CodigoBarberia { get; set; }
 
         public string Email { get; set; }
 
@@ -18,7 +20,6 @@
 
         public int CodigoTipoDocumento { get; set; }
 
-        public int CodigoBarberia { get; set; }
 
         public string Foto { get; set; }
     }

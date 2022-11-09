@@ -16,6 +16,6 @@ namespace Barberiapp.Entidades
 
         // Referencias
 
-        public ICollection<IdentityModels> Usuarios { get; set; }
+        public ICollection<ApplicationUser > Usuarios { get; set; }
     }
 }

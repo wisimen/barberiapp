@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Serviciopp.Controllers
 {
     [ApiController]
-    [Route("api/Servicio")]
+    [Route("api/servicio")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "BasicUser")]
     public class ServicioController : Controller
     {
@@ -58,7 +58,7 @@ namespace Serviciopp.Controllers
         }
 
 
-        [HttpPut("{codigoServicio}")]
+        [HttpPut("{codigoServicio:int}")]
         public async Task<ActionResult> Put(ServicioActualizacionDTO servicio, int codigoServicio)
         {
             if (servicio.CodigoServicio != codigoServicio)
@@ -76,7 +76,7 @@ namespace Serviciopp.Controllers
             return Ok();
         }
 
-        [HttpDelete("{codigoServicio}")]
+        [HttpDelete("{codigoServicio:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         public async Task<ActionResult> Delete(int codigoServicio)
         {

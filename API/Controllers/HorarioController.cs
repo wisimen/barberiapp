@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Horariopp.Controllers
 {
     [ApiController]
-    [Route("api/Horario")]
+    [Route("api/horario")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "BasicUser")]
     public class HorarioController : Controller
     {
@@ -34,7 +34,7 @@ namespace Horariopp.Controllers
         }
 
         // Búsqueda por parámetro
-        [HttpGet("PorHora/{dia:string}")]
+        [HttpGet("PorHora/{hora}")]
         public async Task<ActionResult<List<HorarioDTO>>> GetPorHora(string hora)
         {
             TimeSpan time = TimeSpan.Parse(hora);
@@ -60,7 +60,7 @@ namespace Horariopp.Controllers
         }
 
 
-        [HttpPut("{codigoHorario}")]
+        [HttpPut("{codigoHorario:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         public async Task<ActionResult> Put(HorarioActualizacionDTO horario, int codigoHorario)
         {
@@ -79,7 +79,7 @@ namespace Horariopp.Controllers
             return Ok();
         }
 
-        [HttpDelete("{codigoHorario}")]
+        [HttpDelete("{codigoHorario:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         public async Task<ActionResult> Delete(int codigoHorario)
         {

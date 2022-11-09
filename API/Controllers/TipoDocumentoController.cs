@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Barberiapp.Controllers
 {
     [ApiController]
-    [Route("api/TipoDocumento")]
+    [Route("api/tipoDocumento")]
     [AllowAnonymous]
     public class TipoDocumentoController : Controller
     {
@@ -54,7 +54,7 @@ namespace Barberiapp.Controllers
             return NoContent(); //204
         }
 
-        [HttpPut("{codigoTipoDocumento}")]
+        [HttpPut("{codigoTipoDocumento:int}")]
         public async Task<ActionResult> Put(TipoDocumentoActualizacionDTO tipoDocumento, int codigoTipoDocumento)
         {
             if (tipoDocumento.CodigoTipoDocumento != codigoTipoDocumento)
@@ -73,7 +73,7 @@ namespace Barberiapp.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
-        [HttpDelete("{codigoTipoDocumento}")]
+        [HttpDelete("{codigoTipoDocumento:int}")]
         public async Task<ActionResult> Delete(int codigoTipoDocumento)
         {
             var tipoDocumento = await context.TipoDocumento.FirstOrDefaultAsync(x => x.CodigoTipoDocumento == codigoTipoDocumento);
