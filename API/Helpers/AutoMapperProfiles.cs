@@ -31,12 +31,14 @@ namespace Barberiapp.Helpers
 
             //Mapeo Barbero
             CreateMap<Barbero, BarberoDTO>().ForAllMembers(x => x.MapFrom(src => src.Usuario));
+            CreateMap<BarberoCreacionDTO, ApplicationUser>();
             CreateMap<BarberoCreacionDTO, Barbero>();
             CreateMap<BarberoActualizacionDTO, Barbero>();
             CreateMap<BarberoDTO, Barbero>();
 
             //Mapeo Cliente
             CreateMap<Cliente, ClienteDTO>().ForAllMembers(x => x.MapFrom(src => src.Usuario));
+            CreateMap<ClienteCreacionDTO, ApplicationUser>();
             CreateMap<ClienteCreacionDTO, Cliente>();
             CreateMap<ClienteActualizacionDTO, Cliente>();
             CreateMap<ClienteDTO, Cliente>();

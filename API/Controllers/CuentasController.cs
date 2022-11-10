@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Barberiapp.Data;
 using Barberiapp.DTOs.Autenticacion;
+using Barberiapp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,16 +14,16 @@ namespace Barberiapp.Controllers
 {
     public class CuentasController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<ApplicationUser> userManager;
         public readonly IConfiguration configuration;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
         private readonly ILogger<CuentasController> logger;
 
-        public CuentasController(UserManager<IdentityUser> userManager,
+        public CuentasController(UserManager<ApplicationUser> userManager,
             IConfiguration configuration,
-            SignInManager<IdentityUser> signInManager,
+            SignInManager<ApplicationUser> signInManager,
             ApplicationDbContext context,
             IMapper mapper,
             ILogger<CuentasController> logger)

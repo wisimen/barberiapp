@@ -19,8 +19,8 @@ namespace Barberiapp.Controllers
     public class BarberoController : CuentasController
 
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
         private readonly ILogger<CuentasController> logger;
@@ -28,9 +28,9 @@ namespace Barberiapp.Controllers
         private readonly string contenedor = "FotoBarberoFiles";
 
         public BarberoController(
-            UserManager<IdentityUser> userManager,
+            UserManager<ApplicationUser> userManager,
             IConfiguration configuration,
-            SignInManager<IdentityUser> signInManager,
+            SignInManager<ApplicationUser> signInManager,
             ApplicationDbContext context,
             IMapper mapper,
             ILogger<BarberoController> logger,
@@ -78,14 +78,28 @@ namespace Barberiapp.Controllers
         {
 
             var barberoEntidad = mapper.Map<ApplicationUser>(barberoCreacionDTO);
-            barberoEntidad.UserName = barberoEntidad.Email;
-            barberoEntidad.Id = Guid.NewGuid().ToString();
-            if (barberoCreacionDTO.FotoFile != null)
+            var existUser = await userManager.FindByEmailAsync(barberoEntidad.Email);
+            IdentityResult resultado;
+            if (existUser != null)
             {
-                barberoEntidad.Foto = await almacenadorArchivos.GuardarArchivo(contenedor, barberoCreacionDTO.FotoFile);
+                if (context.Barbero.FirstOrDefault(x => x.CodigoUsuario == existUser.Id) != null)
+                {
+                    return BadRequest($"Ya existe un barbero registrado con la cuenta ${barberoEntidad.Email}");
+                }
+                barberoEntidad.Id = existUser.Id;
+                resultado = await userManager.UpdateAsync(barberoEntidad);
             }
+            else
+            {
+                barberoEntidad.UserName = barberoEntidad.Email;
+                barberoEntidad.Id = Guid.NewGuid().ToString();
+                if (barberoCreacionDTO.FotoFile != null)
+                {
+                    barberoEntidad.Foto = await almacenadorArchivos.GuardarArchivo(contenedor, barberoCreacionDTO.FotoFile);
+                }
 
-            var resultado = await userManager.CreateAsync(barberoEntidad, barberoCreacionDTO.Password);
+                resultado = await userManager.CreateAsync(barberoEntidad, barberoCreacionDTO.Password);
+            }
 
             context.Add(new Barbero
             {

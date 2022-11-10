@@ -18,8 +18,8 @@ namespace Barberiapp.Controllers
     [AllowAnonymous]
     public class ClienteController : CuentasController
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
         private readonly ILogger<CuentasController> logger;
@@ -27,9 +27,9 @@ namespace Barberiapp.Controllers
         private readonly string contenedor = "FotoClienteFiles";
 
         public ClienteController(
-            UserManager<IdentityUser> userManager,
+            UserManager<ApplicationUser> userManager,
             IConfiguration configuration,
-            SignInManager<IdentityUser> signInManager,
+            SignInManager<ApplicationUser> signInManager,
             ApplicationDbContext context,
             IMapper mapper,
             ILogger<ClienteController> logger,
@@ -95,26 +95,31 @@ namespace Barberiapp.Controllers
         {
 
             var clienteEntidad = mapper.Map<ApplicationUser>(clienteCreacionDTO);
-            clienteEntidad.UserName = clienteEntidad.Email;
-            clienteEntidad.Id = Guid.NewGuid().ToString();
-            if (clienteCreacionDTO.FotoFile != null)
+            var existUser = await userManager.FindByEmailAsync(clienteEntidad.Email);
+            IdentityResult resultado;
+            if (existUser != null)
             {
-                clienteEntidad.Foto = await almacenadorArchivos.GuardarArchivo(contenedor, clienteCreacionDTO.FotoFile);
+                if (context.Cliente.FirstOrDefault(x => x.CodigoUsuario == existUser.Id) != null)
+                {
+                    return BadRequest($"Ya existe un cliente registrado con la cuenta ${clienteEntidad.Email}");
+                }
+                clienteEntidad.Id = existUser.Id;
+                resultado = await userManager.UpdateAsync(clienteEntidad);
             }
-
-            var resultado = await userManager.CreateAsync(clienteEntidad, clienteCreacionDTO.Password);
+            else
+            {
+                resultado = await NuevaCuenta(clienteCreacionDTO, clienteEntidad);
+            }
 
             context.Add(new Cliente
             {
                 CodigoUsuario = clienteEntidad.Id
-            }
-            );
+            });
+
             await context.SaveChangesAsync();
 
             logger.LogWarning("Nueva cuenta creada: {@clienteEntidad.Id}", clienteEntidad.Id);
-
-            await AddClaimsToUser(clienteEntidad.Email, "Rol", "Cliente", configuration["permissionKey"]);
-
+            await AddClaimsToUser(clienteCreacionDTO.Email, "Rol", "Cliente", configuration["permissionKey"]);
             if (resultado.Succeeded)
             {
                 CredencialesUsuario credencial = new CredencialesUsuario
@@ -129,6 +134,7 @@ namespace Barberiapp.Controllers
                 return BadRequest(resultado.Errors);
             }
         }
+
 
         [HttpPut("{codigoCliente:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "BasicUser")]
@@ -208,6 +214,17 @@ namespace Barberiapp.Controllers
             {
                 throw new ApplicationException("No se pudo cambiar la contraseña");
             }
+        }
+        private async Task<IdentityResult> NuevaCuenta(ClienteCreacionDTO clienteCreacionDTO, ApplicationUser clienteEntidad)
+        {
+            clienteEntidad.UserName = clienteEntidad.Email;
+            clienteEntidad.Id = Guid.NewGuid().ToString();
+            if (clienteCreacionDTO.FotoFile != null)
+            {
+                clienteEntidad.Foto = await almacenadorArchivos.GuardarArchivo(contenedor, clienteCreacionDTO.FotoFile);
+            }
+
+            return await userManager.CreateAsync(clienteEntidad, clienteCreacionDTO.Password);
         }
     }
 }

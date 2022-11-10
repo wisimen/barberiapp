@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Barberiapp.Controllers
 {
     [ApiController]
-    [Route("api/tipoDocumento")]
+    [Route("api/tipodocumento")]
     [AllowAnonymous]
     public class TipoDocumentoController : Controller
     {
@@ -46,7 +46,7 @@ namespace Barberiapp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] TipoDocumentoCreacionDTO tipoDocumentoCreacionDTO)
+        public async Task<ActionResult> Post(TipoDocumentoCreacionDTO tipoDocumentoCreacionDTO)
         {
             var tipoDocumento = mapper.Map<TipoDocumento>(tipoDocumentoCreacionDTO);
             context.Add(tipoDocumento);

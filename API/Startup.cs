@@ -119,12 +119,10 @@ namespace Barberiapp
                     });
 
             });
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
-
-            services.AddIdentityCore<ApplicationUser>()
-                    .AddRoles<IdentityRole>()
-                    .AddEntityFrameworkStores<ApplicationDbContext>()
-                    .AddDefaultTokenProviders();
 
             services.AddAuthorization(opciones =>
 
