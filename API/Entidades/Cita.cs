@@ -41,7 +41,7 @@ namespace Barberiapp.Entidades
         [ForeignKey("CodigoCliente")]
         public Cliente Cliente { get; set; }
 
-        public ICollection<Servicio> Servicios { get; set; }
+        public ICollection<ServiciosCita> ServiciosCita { get; set; }
 
     }
 }

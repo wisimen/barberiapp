@@ -5,7 +5,6 @@ namespace Barberiapp.Entidades
 {
     public class Servicio
     {
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CodigoServicio { get; set; }
@@ -31,6 +30,8 @@ namespace Barberiapp.Entidades
         public Barberia Barberia { get; set; }
 
         public ICollection<TipoServicio> TipoServicios { get; set; }
+
+        public ICollection<ServiciosCita> ServiciosCita { get; set; }
     }
 }
 
