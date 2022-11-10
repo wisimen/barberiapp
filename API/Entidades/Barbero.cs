@@ -24,8 +24,6 @@ namespace Barberiapp.Entidades
 
         public ICollection<Cita> Citas { get; set; }
 
-        public ICollection<TipoServicio> TipoServicio { get; set; }
-
         public ICollection<FotoCorte> FotosCortes { get; set; }
     }
 }

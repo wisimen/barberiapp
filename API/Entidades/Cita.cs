@@ -31,8 +31,7 @@ namespace Barberiapp.Entidades
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         public int CodigoCliente { get; set; }
 
-        [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        public int CodigoMedioPago { get; set; }
+        public bool Pagado { get; set; }
 
         // Referencias
 
@@ -44,7 +43,6 @@ namespace Barberiapp.Entidades
 
         public ICollection<Servicio> Servicios { get; set; }
 
-        public MediosPago MedioPago { get; set; }
     }
 }
 

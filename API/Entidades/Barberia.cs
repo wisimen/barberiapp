@@ -51,7 +51,6 @@ namespace Barberiapp.Entidades
         public ICollection<Barbero> Barberos { get; set; }
         public ICollection<Horario> Horarios { get; set; }
         public ICollection<Servicio> Servicios { get; set; }
-        public ICollection<MediosPago> MediosPago { get; set; }
     }
 }
 

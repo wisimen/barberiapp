@@ -36,6 +36,11 @@ namespace Barberiapp.Data
            .HasPrincipalKey(b => b.CodigoBarbero);
 
 
+            modelBuilder.Entity<Servicio>()
+           .HasMany(p => p.TipoServicios)
+           .WithMany(b => b.Servicios)
+           .UsingEntity(j => j.ToTable("TipoServiciosIncluidos"));
+
 
             base.OnModelCreating(modelBuilder);
 
@@ -52,7 +57,6 @@ namespace Barberiapp.Data
         public DbSet<Cita> Cita { get; set; }
         public DbSet<Servicio> Servicio { get; set; }
         public DbSet<TipoServicio> TipoServicio { get; set; }
-        public DbSet<MediosPago> MediosPago { get; set; }
         public DbSet<Horario> Horario { get; set; }
         public DbSet<FotoCorte> FotoCorte { get; set; }
 

@@ -17,7 +17,5 @@
         public int CodigoBarbero { get; set; }
 
         public int CodigoCliente { get; set; }
-
-        public int CodigoMedioPago { get; set; }
     }
 }

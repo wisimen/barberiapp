@@ -6,7 +6,6 @@ using Barberiapp.DTOs.Cita;
 using Barberiapp.DTOs.Cliente;
 using Barberiapp.DTOs.FotoCorte;
 using Barberiapp.DTOs.Horario;
-using Barberiapp.DTOs.MediosPago;
 using Barberiapp.DTOs.Servicio;
 using Barberiapp.DTOs.TipoDocumento;
 using Barberiapp.DTOs.TipoServicio;
@@ -60,12 +59,6 @@ namespace Barberiapp.Helpers
             CreateMap<HorarioCreacionDTO, Horario>();
             CreateMap<HorarioActualizacionDTO, Horario>();
             CreateMap<HorarioDTO, Horario>();
-
-            //MediosPago
-            CreateMap<MediosPago, MediosPagoDTO>().ReverseMap();
-            CreateMap<MediosPagoCreacionDTO, MediosPago>();
-            CreateMap<MediosPagoActualizacionDTO, MediosPago>();
-            CreateMap<MediosPagoDTO, MediosPago>();
 
             //Servicio
             CreateMap<Servicio, ServicioDTO>().ReverseMap();
