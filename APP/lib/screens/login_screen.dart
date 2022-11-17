@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:barberiapp/screens/register_user_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _passwordShow=false;
   bool _remerberme=true;
-  
+
 
 
   @override
@@ -30,21 +31,25 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
 
     backgroundColor: Color.fromARGB(249, 230, 216, 178),
-    body: Center(child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget> [
-        _showlogo(),
-        _showemail(),
-        _showpassword(),
-        _showRememberme(),
-        _showButtons(),
-      ],
-    )),
-
+    body: Center(
+      child:
+      SingleChildScrollView(
+        padding: EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget> [
+            _showlogo(),
+            _showemail(),
+            _showpassword(),
+            _showRememberme(),
+            _showButtons(),
+          ],
+        ),
+      ),
+    ),
   );
-    
   }
-  
+
   Widget _showlogo() {
     return Image(
       image: AssetImage('images/barber.jpg'),
@@ -53,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
     fit: BoxFit.fill,
     );
   }
-  
+
   Widget _showemail() {
     return Container(
       padding: EdgeInsets.all(20),
@@ -69,11 +74,11 @@ class _LoginScreenState extends State<LoginScreen> {
             suffixIcon: Icon(Icons.email),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10)))),
-         
+
     );
-  
+
   }
-  
+
   Widget _showpassword() {
     return Container(
       padding: EdgeInsets.all(20),
@@ -87,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
             errorText: _passwordShowError ? _passwordError: null,
             prefixIcon: Icon(Icons.lock),
             suffixIcon: IconButton(
-              icon: _passwordShow 
+              icon: _passwordShow
               ? Icon(Icons.visibility)
               : Icon(Icons.visibility_off),
               onPressed: () {
@@ -102,25 +107,25 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
 
               onChanged: (value) {
-                _password = value;                
+                _password = value;
               },
       ),
     );
-    
+
   }
-  
+
    Widget _showRememberme() {
     return CheckboxListTile(
-      
+
       title: Text('Remember me'),
-      value: _remerberme, 
+      value: _remerberme,
       onChanged: ((value) {
         setState(() {
           _remerberme=value!;
         });
       }));
    }
-   
+
      Widget _showButtons() {
       return Container(
         margin: EdgeInsets.only(left: 10, right: 10),
@@ -132,7 +137,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 _showLoginButton(),
                 SizedBox(width: 20,),
                 _showRegisterButton(),
-                
               ],
             )
           ],
@@ -156,9 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
      }
-     
       Widget _showRegisterButton() {
-
          return Expanded(
         child: ElevatedButton(
           child: Text('Registrarse'),
@@ -169,11 +171,10 @@ class _LoginScreenState extends State<LoginScreen> {
               }
             ),
           ),
-        onPressed: () => _login(),
+        onPressed: () => _register(),
         ),
       );
      }
-     
        void _login() async {
         setState(() {
 
@@ -182,10 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
           return;
         }
         });
-
-       
        }
-       
          bool _validateFields() {
           bool isValid=true;
 
@@ -193,28 +191,25 @@ class _LoginScreenState extends State<LoginScreen> {
             isValid=false;
             _emailShowError=true;
             _emailError='El email es obligatorio';
-          
-          } 
+
+          }
           else if(!EmailValidator.validate(_email)) {
             isValid=false;
 
             _emailShowError=true;
             _emailError='email invalido';
-
           }
           else {
             _emailShowError=false;
           }
-
-
           //
 
           if(_password.isEmpty){
             isValid=false;
             _passwordShowError=true;
             _passwordError='Debes ingresar un password';
-          
-          } 
+
+          }
           else if(_password.length <6) {
             isValid=false;
 
@@ -233,12 +228,8 @@ class _LoginScreenState extends State<LoginScreen> {
           return isValid;
 
          }
-       
-        /* void _register() {
+        void _register() {
           Navigator.push(
             context, MaterialPageRoute(builder: (context) => RegisterUserScreen()));
-          
-        } */
-
-      
+        }
 }
