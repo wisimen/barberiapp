@@ -68,7 +68,7 @@ namespace Barberiapp.Controllers
 
         [HttpPost("login")] // Inicio de sesión
         [AllowAnonymous]
-        public async Task<ActionResult<RespuestaAutenticacion>> Login(CredencialesUsuario credencialesUsuario)
+        public async Task<ActionResult<RespuestaAutenticacion>> Login([FromBody] CredencialesUsuario credencialesUsuario)
         {
 
             var resultado = await signInManager.PasswordSignInAsync(credencialesUsuario.Email,

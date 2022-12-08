@@ -15,6 +15,7 @@ namespace Barberiapp.Entidades
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [DataType(DataType.Currency, ErrorMessage = "El campo {0} no cumple con el formato")]
+        [Column(TypeName = "float")]
         public decimal Precio { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]

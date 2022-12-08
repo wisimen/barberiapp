@@ -58,7 +58,7 @@ namespace Barberiapp.Controllers
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
-        public async Task<ActionResult> Post([FromBody] BarberiaCreacionDTO barberiaCreacionDTO)
+        public async Task<ActionResult> Post([FromForm] BarberiaCreacionDTO barberiaCreacionDTO)
         {
 
             var barberia = mapper.Map<Barberia>(barberiaCreacionDTO);

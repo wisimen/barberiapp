@@ -55,7 +55,7 @@ namespace Barberiapp.Controllers
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Barberia")]
-        public async Task<ActionResult> Post([FromBody] FotoCorteCreacionDTO fotoCorteCreacionDTO)
+        public async Task<ActionResult> Post([FromForm] FotoCorteCreacionDTO fotoCorteCreacionDTO)
         {
 
             var fotoCorte = mapper.Map<FotoCorte>(fotoCorteCreacionDTO);
@@ -73,7 +73,7 @@ namespace Barberiapp.Controllers
 
         [HttpPut("{codigoFotoCorte:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Barberia")]
-        public async Task<ActionResult> Put([FromBody] FotoCorteActualizacionDTO fotoCorte, int codigoFotoCorte)
+        public async Task<ActionResult> Put([FromForm] FotoCorteActualizacionDTO fotoCorte, int codigoFotoCorte)
         {
             if (fotoCorte.CodigoFotoCorte != codigoFotoCorte)
             {

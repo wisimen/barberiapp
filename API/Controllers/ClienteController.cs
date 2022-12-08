@@ -138,7 +138,7 @@ namespace Barberiapp.Controllers
 
         [HttpPut("{codigoCliente:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "BasicUser")]
-        public async Task<ActionResult> Put([FromBody] ClienteActualizacionDTO clienteActualizacionDTO, int codigoCliente)
+        public async Task<ActionResult> Put([FromForm] ClienteActualizacionDTO clienteActualizacionDTO, int codigoCliente)
         {
             // Realizar validaciones
             if (clienteActualizacionDTO.CodigoCliente != codigoCliente)
