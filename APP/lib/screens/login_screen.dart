@@ -1,8 +1,17 @@
-// ignore_for_file: unused_field, prefer_final_fields, prefer_const_constructors, sort_child_properties_last
+import 'dart:convert';
 
+import 'package:barberiapp/helpers/particles_background.dart';
+import "package:barberiapp/helpers/colores.dart";
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:barberiapp/screens/register_user_screen.dart';
+import 'package:barberiapp/helpers/generador_campos.dart';
+import 'package:barberiapp/helpers/alert_dialog.dart';
+import 'package:barberiapp/helpers/constants.dart';
+import 'package:barberiapp/helpers/loader_dialog.dart';
+import 'package:barberiapp/helpers/security_manager.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,225 +20,271 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen>
+    with TickerProviderStateMixin {
+  String _email = '';
+  bool _sessionDataChecked = false;
+  String _password = '';
+  bool _passwordShow = false;
+  bool _remerberme = true;
 
-  String _email='';
-  String _emailError='';
-  bool _emailShowError=false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  // on constructor call getToken() and isExpired() to validate token
+  // then call super constructor
+  _LoginScreenState() {
+    var tokenValidation =
+        Future.wait([getToken(), isExpired(), getSesionData()]);
+    tokenValidation.then((List<Object?> listaRespuestasToken) {
+      var token = listaRespuestasToken[0] as String?;
+      var isValid = !(listaRespuestasToken[1] as bool);
+      if (token != null) {
+        if (isValid) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              '/home', (Route<dynamic> route) => false);
+        } else {
+          deleteToken();
+        }
+      }
+      var sesionData = listaRespuestasToken[2] as SesionData?;
+      setState(() {
+        if (sesionData?.email != null) {
+          _email = sesionData!.email!;
+        }
 
-  String _password='';
-  String _passwordError='';
-  bool _passwordShowError=false;
-
-  bool _passwordShow=false;
-  bool _remerberme=true;
-
-
+        if (sesionData?.password != null) {
+          _password = sesionData!.password!;
+        }
+        _sessionDataChecked = true;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: color_fondo,
+        body: generar_fondo_animado(_showBody(), this));
+  }
 
-    backgroundColor: Color.fromARGB(249, 230, 216, 178),
-    body: Center(
-      child:
-      SingleChildScrollView(
-        padding: EdgeInsets.all(32),
-        child: Column(
+  Widget _showBody() {
+    // Return a future widget to show a loading dialog
+    if (_sessionDataChecked) {
+      return Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget> [
-            _showlogo(),
-            _showemail(),
-            _showpassword(),
-            _showRememberme(),
+          children: <Widget>[
+            _showLogo(),
+            Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  _showEmail(),
+                  _showPassword(),
+                ],
+              ),
+            ),
+            _showRememberMe(),
             _showButtons(),
-          ],
-        ),
-      ),
-    ),
-  );
+          ]);
+    }
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const <Widget>[CircularProgressIndicator()]);
   }
 
-  Widget _showlogo() {
-    return Image(
-      image: AssetImage('images/barber.jpg'),
-
-    width: 500,
-    fit: BoxFit.fill,
+  Widget _showLogo() {
+    return const Image(
+      image: AssetImage('images/logo_barberiapp_blanco.png'),
+      width: 500,
+      fit: BoxFit.fill,
     );
   }
 
-  Widget _showemail() {
-    return Container(
-      padding: EdgeInsets.all(20),
-      child: TextField(
-        keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-            fillColor: Colors.white,
-            filled: true,
-            hintText: 'Digite su email',
-            labelText: 'Email',
-            errorText: _emailShowError ? _emailError: null,
-            prefixIcon: Icon(Icons.alternate_email),
-            suffixIcon: Icon(Icons.email),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10)))),
+  Widget _showEmail() {
+    onChanged(value) {
+      setState(() {
+        _email = value.toString().trim();
+      });
+    }
 
+    validator(value) {
+      if (value == null || value.isEmpty) {
+        return 'No se ha ingresado un email';
+      }
+      if (!EmailValidator.validate(value.toString())) {
+        return 'El email ingresado no tiene un formato válido';
+      }
+      return null;
+    }
+
+    return crearCampo(
+      "Email",
+      hint: "example@mail.com",
+      keyboardType: TextInputType.emailAddress,
+      icon: Icons.email,
+      onChanged: onChanged,
+      validator: validator,
+      initialValue: _email,
     );
-
   }
 
-  Widget _showpassword() {
-    return Container(
-      padding: EdgeInsets.all(20),
-      child: TextField(
-        obscureText: _passwordShow,
-          decoration: InputDecoration(
-            fillColor: Colors.white,
-            filled: true,
-            hintText: 'Digite su password',
-            labelText: 'Password',
-            errorText: _passwordShowError ? _passwordError: null,
-            prefixIcon: Icon(Icons.lock),
-            suffixIcon: IconButton(
-              icon: _passwordShow
-              ? Icon(Icons.visibility)
-              : Icon(Icons.visibility_off),
-              onPressed: () {
-                setState(() {
-                  _passwordShow = !_passwordShow;
-                });
-              },
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10)
-              ),
-              ),
+  Widget _showPassword() {
+    onChanged(value) {
+      setState(() {
+        _password = value.toString().trim();
+      });
+    }
 
-              onChanged: (value) {
-                _password = value;
-              },
-      ),
-    );
+    validator(value) {
+      if (value == null || value.isEmpty) {
+        return 'No se ha ingresado una contraseña';
+      }
+      return null;
+    }
 
-  }
-
-   Widget _showRememberme() {
-    return CheckboxListTile(
-
-      title: Text('Remember me'),
-      value: _remerberme,
-      onChanged: ((value) {
+    return crearCampo(
+      "Contraseña",
+      keyboardType: TextInputType.visiblePassword,
+      icon: Icons.lock,
+      onChanged: onChanged,
+      validator: validator,
+      initialValue: _password,
+      obscureText: !_passwordShow,
+      obscureTextCallback: (() {
         setState(() {
-          _remerberme=value!;
+          _passwordShow = !_passwordShow;
         });
-      }));
-   }
+      }),
+    );
+  }
 
-     Widget _showButtons() {
-      return Container(
-        margin: EdgeInsets.only(left: 10, right: 10),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                _showLoginButton(),
-                SizedBox(width: 20,),
-                _showRegisterButton(),
-              ],
-            )
-          ],
+  Widget _showRememberMe() {
+    return Theme(
+        data: ThemeData(unselectedWidgetColor: color_labels),
+        child: CheckboxListTile(
+            checkColor: color_labels,
+            activeColor: color_boton_principal,
+            title:
+                const Text('Recordarme', style: TextStyle(color: color_labels)),
+            value: _remerberme,
+            onChanged: ((value) {
+              setState(() {
+                _remerberme = value!;
+                deleteSesionData();
+              });
+            })));
+  }
+
+  Widget _showButtons() {
+    return Container(
+      margin: const EdgeInsets.only(left: 10, right: 10),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              _showLoginButton(),
+              const SizedBox(
+                width: 20,
+              ),
+              _showRegisterButton(),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _showLoginButton() {
+    return Expanded(
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+            return color_boton_principal;
+          }),
         ),
-      );
-
-     }
-
-     Widget _showLoginButton() {
-      return Expanded(
-        child: ElevatedButton(
-          child: Text('Ingresar'),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState>states){
-                return Color.fromARGB(238, 228, 189, 84);
-              }
-            ),
-          ),
+        child: const Text('Ingresar'),
         onPressed: () => _login(),
+      ),
+    );
+  }
+
+  Widget _showRegisterButton() {
+    return Expanded(
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+            return color_boton_segundario;
+          }),
         ),
-      );
-     }
-      Widget _showRegisterButton() {
-         return Expanded(
-        child: ElevatedButton(
-          child: Text('Registrarse'),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState>states){
-                return Color.fromARGB(225, 207, 145, 11);
-              }
-            ),
+        child: const Text(
+          'Registrarse',
+          style: TextStyle(
+            color: color_labels_segundario,
           ),
-        onPressed: () => _register(),
         ),
-      );
-     }
-       void _login() async {
-        setState(() {
+        onPressed: () => _register(),
+      ),
+    );
+  }
 
-          _passwordShow = false;
-           if(!_validateFields()) {
-          return;
-        }
-        });
-       }
-         bool _validateFields() {
-          bool isValid=true;
-
-          if(_email.isEmpty){
-            isValid=false;
-            _emailShowError=true;
-            _emailError='El email es obligatorio';
-
-          }
-          else if(!EmailValidator.validate(_email)) {
-            isValid=false;
-
-            _emailShowError=true;
-            _emailError='email invalido';
-          }
-          else {
-            _emailShowError=false;
-          }
-          //
-
-          if(_password.isEmpty){
-            isValid=false;
-            _passwordShowError=true;
-            _passwordError='Debes ingresar un password';
-
-          }
-          else if(_password.length <6) {
-            isValid=false;
-
-            _passwordShowError=true;
-            _passwordError='Su password debe contener al menos 6 caracteres';
-
-          }
-          else {
-            _passwordShowError=false;
-          }
-
-
-          setState(() {
+  void _login() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      showLoadingDialog(context);
+      var request = http.post(loginControllerUri,
+          body: json.encode({
+            'email': _email,
+            'password': _password,
+          }),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'accept': 'application/json',
           });
+      request.then((http.Response response) {
+            if (response.statusCode == 200) {
+              var jsonResponse = jsonDecode(response.body);
+              saveToken(jsonResponse['token']);
+              if (_remerberme) {
+                storeSesionData(_email, _password);
+              }
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/home', (Route<dynamic> route) => false);
+              });
+            } else {
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                Navigator.of(context).pop();
+                showAlertDialog(
+                    type: AlertDialogType.error,
+                    content: const Text(
+                      'Error al iniciar sesión. Verifique los datos ingresados',
+                      textAlign: TextAlign.center,
+                    ),
+                    title: "No se pudo iniciar sesión",
+                    context: context,
+                    callback: () {});
+              });
+            }
+          });
+    } else {
+      showAlertDialog(
+          type: AlertDialogType.info,
+          context: context,
+          title: 'Hay campos incompletos',
+          content: const Text(
+            'Debe ingresar correctamente la información solicitada',
+            textAlign: TextAlign.center,
+          ),
+          callback: () {},
+          defaultActionText: 'OK');
+    }
+  }
 
-          return isValid;
-
-         }
-        void _register() {
-          Navigator.push(
-            context, MaterialPageRoute(builder: (context) => RegisterUserScreen()));
-        }
+  void _register() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => RegisterUserScreen()));
+  }
 }

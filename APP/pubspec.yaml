@@ -36,6 +36,22 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   email_validator: '^2.1.17'
+  flutter_svg_provider: ^1.0.3
+  animated_background: ^2.0.0
+  file_picker: ^5.2.2
+  image_picker: ^0.8.6
+  http: ^0.13.5
+  flutter_secure_storage: ^6.1.0
+  jwt_decoder: ^2.0.1
+  font_awesome_flutter: ^10.2.1
+  url_launcher: ^6.1.7
+  js: ^0.6.4
+  flutter_launcher_icons: ^0.11.0
+
+flutter_icons:
+  image_path: "images/AppIcon.png"
+  android: true
+  ios: true
 
 dev_dependencies:
   flutter_test:

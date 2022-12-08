@@ -1,4 +1,6 @@
+import 'package:barberiapp/screens/home_screen.dart';
 import 'package:barberiapp/screens/login_screen.dart';
+import 'package:barberiapp/screens/register_user_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,12 +13,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // ignore: prefer_const_constructors
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Barberiapp',
       home: const LoginScreen(),
-
+      routes: {
+        //'/': (context) => const HomeScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/register': (context) => const RegisterUserScreen(),
+        '/home': (context) => const HomeScreen(),
+      },
     );
   }
 }
+
